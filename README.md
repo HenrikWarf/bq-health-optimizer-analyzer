@@ -1,4 +1,4 @@
-# BigQuery Health & Optimization Analyzer
+# BigQuery Compass
 
 This application uses a multi-agent AI system to perform a comprehensive analysis of a Google BigQuery environment. It provides an overall health score, detailed findings, and interactive, AI-powered recommendations to help you optimize for cost, performance, and metadata best practices.
 
