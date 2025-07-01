@@ -1,0 +1,610 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6;
+    color: #333;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+
+.app-description {
+    background-color: #ffffff; /* White background */
+    border: 1px solid #dee2e6; /* Match project selector border */
+    border-radius: 8px;
+    padding: 1.5rem 2rem;
+    max-width: 800px;
+    margin: 0 auto 2rem auto;
+    text-align: center;
+}
+
+.logo-image {
+    width: 80px;
+    height: auto;
+    margin-bottom: 1rem;
+}
+
+.app-description h1 {
+    font-size: 1.8rem;
+    color: #333; /* Black text color */
+    margin: 0 0 0.5rem 0;
+}
+
+.app-description p {
+    font-size: 1rem;
+    color: #666;
+    max-width: 70ch;
+    margin: 0 auto; /* Center the paragraph text */
+}
+
+main {
+    padding: 0; /* Remove padding from main as it's on the container */
+}
+
+.project-selector-container {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1.5rem 2rem; /* Match the app description padding */
+    margin: 0 auto 2rem auto; /* Center it and add margin bottom */
+    max-width: 800px; /* Match the app description width */
+    text-align: center;
+}
+
+.project-selector-container label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    color: #343a40;
+    font-weight: 500;
+}
+
+#project-select {
+    width: 50%;
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    font-size: 1rem;
+}
+
+#project-select:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+/* Custom focus outline for theme consistency */
+#project-select:focus,
+#analyze-btn:focus,
+.accordion-button:focus,
+.action-plan-button:focus,
+.inner-accordion-button:focus {
+    outline: 2px solid #343a40;
+    outline-offset: 2px;
+}
+
+.controls {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+#analyze-btn {
+    background-color: #343a40; /* Black */
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#analyze-btn:hover {
+    background-color: #495057; /* Lighter Black/Grey */
+}
+
+#analyze-btn:disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+}
+
+.progress-container {
+    max-width: 800px;
+    margin: 0 auto 2rem auto;
+    padding: 1.5rem 2rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.progress-bar-container {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    color: #555;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 20px;
+    background-color: #3498db; /* New Blue Theme */
+    transition: width 0.4s ease-in-out;
+    text-align: center;
+    line-height: 20px;
+    color: white;
+}
+
+#status-message {
+    font-size: 1rem;
+    color: #555;
+}
+
+.results-container {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.report-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.report-card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    color: #333; /* Use standard dark text color */
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.75rem;
+}
+
+.report-card-header i {
+    font-size: 1.2rem;
+    margin-right: 1rem;
+}
+
+.report-card-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.report-card-content {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    flex-grow: 1;
+    margin-bottom: 0.5em;
+}
+
+.report-card-description {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.report-card-content ul {
+    padding-left: 20px;
+    margin: 0;
+}
+
+.report-card-content li {
+    margin-bottom: 0.5em;
+}
+
+/* Accordion Styles */
+.accordion-container {
+    /* No styles needed on the container itself now */
+}
+
+.accordion-item {
+    background-color: white;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: box-shadow 0.3s ease;
+    border: 1px solid #e9ecef;
+    border-left: 5px solid transparent; /* For importance color */
+}
+
+.accordion-item:last-child {
+    margin-bottom: 0;
+}
+
+.accordion-item:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.accordion-item.importance-high { border-left-color: #F03E3E; }
+.accordion-item.importance-medium { border-left-color: #FFC107; }
+.accordion-item.importance-low { border-left-color: #28A745; }
+
+.accordion-button {
+    background-color: transparent;
+    color: #333;
+    cursor: pointer;
+    padding: 1rem 1.5rem;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 1rem;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.accordion-button > div { /* Wrapper for icon and span */
+    display: flex;
+    align-items: center;
+}
+
+.accordion-button .importance-icon {
+    margin-right: 1rem;
+    font-size: 1.1rem;
+    width: 20px; /* Give icon a fixed width */
+    text-align: center;
+}
+
+.accordion-item.importance-high .importance-icon { color: #F03E3E; }
+.accordion-item.importance-medium .importance-icon { color: #FFC107; }
+.accordion-item.importance-low .importance-icon { color: #28A745; }
+
+.accordion-button:hover {
+    background-color: transparent; /* No background on button hover */
+}
+
+.accordion-button.active {
+    color: #2980b9; /* New Blue Theme */
+    border-bottom: 1px solid #e9ecef;
+}
+
+.accordion-button i {
+    font-size: 0.9rem;
+    color: #666;
+    transition: transform 0.3s ease;
+}
+
+.accordion-button.active i {
+    transform: rotate(180deg);
+}
+
+.accordion-button:focus {
+    outline: 2px solid #343a40;
+    outline-offset: 2px;
+}
+
+.accordion-panel {
+    background-color: transparent;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+}
+
+.accordion-panel .accordion-content {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+}
+
+.accordion-button.active + .accordion-panel {
+    padding: 1.5rem;
+}
+
+.gauge-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 0;
+}
+
+#health-gauge {
+    width: 100%;
+    max-width: 250px; /* Adjust as needed */
+    height: 125px; /* Give the canvas a specific height */
+}
+
+#health-score-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-top: -1.5rem; /* Pull the text up closer to the gauge */
+}
+
+.gauge-legend {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: #555;
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 6px;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.legend-dot.red { background-color: #F03E3E; }
+.legend-dot.yellow { background-color: #FFDD00; }
+.legend-dot.green { background-color: #30B32D; }
+
+.gauge-rating-description {
+    text-align: center;
+    margin-top: 1.5rem; /* Increased top margin for spacing */
+    font-size: 0.9rem;
+    color: #555;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+}
+
+.gauge-rating-description strong {
+    font-weight: 600;
+}
+
+#report-output h1,
+#report-output h2,
+#report-output h3,
+#report-output p,
+#report-output ul,
+#report-output li,
+#report-output strong,
+#report-output code {
+    all: unset;
+}
+
+.hidden {
+    display: none;
+}
+
+.action-plan-container {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed #dee2e6;
+}
+
+.action-plan-button {
+    background-color: #343a40; /* Black */
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 1rem;
+}
+
+.action-plan-button:hover {
+    background-color: #495057; /* Lighter Black/Grey */
+}
+
+.action-plan-button:disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+}
+
+.action-plan-button i {
+    margin-right: 0.5rem;
+}
+
+.action-plan-result {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 5px;
+    padding: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    display: none; /* Hidden by default */
+}
+
+.action-plan-result .error {
+    color: #c0392b;
+    font-weight: bold;
+}
+
+/* Styles for code blocks generated by marked.js */
+.action-plan-result pre {
+    background-color: #e9ecef;
+    border-radius: 5px;
+    padding: 1rem;
+    overflow-x: auto;
+    font-family: 'Courier New', Courier, monospace;
+    position: relative;
+}
+
+.action-plan-result code {
+    font-family: inherit;
+}
+
+.copy-code-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.copy-code-button:hover {
+    opacity: 1;
+}
+
+.copy-code-button:after {
+    content: 'Copy';
+}
+
+.copy-code-button.copied:after {
+    content: 'Copied!';
+    color: #28a745;
+}
+
+/* Inner Accordion for Action Plan */
+.inner-accordion {
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    margin-top: 1rem;
+}
+
+.inner-accordion-button {
+    background-color: #f8f9fa;
+    color: #495057;
+    cursor: pointer;
+    padding: 0.8rem 1rem;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.inner-accordion-button:hover {
+    background-color: #e9ecef;
+}
+
+.inner-accordion-button.active {
+    border-bottom: 1px solid #e9ecef;
+}
+
+.inner-accordion-button i {
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.inner-accordion-button.active i {
+    transform: rotate(180deg);
+}
+
+.inner-accordion-panel {
+    padding: 0; /* Remove padding from the animated container */
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+}
+
+.inner-accordion-panel .inner-accordion-content {
+    padding: 1.5rem; /* Apply padding to the non-animated inner div */
+    border-top: 1px solid #e9ecef;
+}
+
+/* Styles for code blocks generated by marked.js */
+.action-plan-result pre {
+    background-color: #e9ecef;
+    border-radius: 5px;
+    padding: 1rem;
+    overflow-x: auto;
+    font-family: 'Courier New', Courier, monospace;
+    position: relative;
+}
+
+.action-plan-result code {
+    font-family: inherit;
+}
+
+.progress-details-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 1.5rem;
+    text-align: left;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.progress-details-list li {
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.progress-details-list li .spinner {
+    width: 20px;
+    margin-right: 0.75rem;
+    display: inline-block;
+    text-align: center;
+    color: #3498db; /* Blue for spinner */
+}
+
+.progress-details-list li.completed .spinner {
+    color: #28a745; /* Green for checkmark */
+}
+
+.reading-list-result {
+    margin-top: 1rem;
+}
+
+.reading-list {
+    list-style: none;
+    padding: 0;
+}
+
+.reading-list li {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.reading-list li:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.reading-list li a {
+    display: block;
+    font-weight: 600;
+    color: #2980b9;
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+    word-break: break-all;
+}
+
+.reading-list li a:hover {
+    text-decoration: underline;
+}
+
+.reading-list li p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+} 

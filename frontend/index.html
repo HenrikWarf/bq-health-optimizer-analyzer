@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BigQuery Environment Analyzer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="app-description">
+            <img src="bigquery.svg" alt="BigQuery Logo" class="logo-image">
+            <h1>BigQuery Health & Optimization Analyzer</h1>
+            <p>This tool analyzes your Google BigQuery environment to provide a comprehensive health score and actionable recommendations. It assesses metadata completeness (like descriptions for datasets, tables, and columns) and identifies structural opportunities for cost and performance optimization.</p>
+        </div>
+
+        <main>
+            <div class="project-selector-container">
+                <label for="project-select">Select a Google Cloud Project:</label>
+                <select id="project-select" disabled>
+                    <option value="">Loading projects...</option>
+                </select>
+                <button id="analyze-btn" disabled>Analyze Project</button>
+            </div>
+    
+            <div id="progress-container" class="progress-container hidden">
+                <div class="progress-bar-container">
+                    <div id="progress-bar" class="progress-bar"></div>
+                </div>
+                <div id="status-message"></div>
+                <ul id="progress-details" class="progress-details-list"></ul>
+            </div>
+    
+            <div id="results-container" class="results-container hidden">
+                <!-- The report sections will be dynamically inserted here -->
+            </div>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gaugeJS@1.3.9/dist/gauge.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
