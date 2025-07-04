@@ -321,7 +321,7 @@ async def analyze_environment(request: Request):
     return EventSourceResponse(event_stream())
 
 def start():
-    """Launched with `poetry run start` at root level"""
+    """Starts the Uvicorn server."""
     uvicorn.run("backend.main:app", host="0.0.0.0", port=8000, reload=True)
 
 if __name__ == "__main__":
