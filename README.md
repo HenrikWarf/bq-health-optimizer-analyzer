@@ -13,6 +13,25 @@ This application uses a multi-agent AI system to perform a comprehensive analysi
 - **Recommended Reading**: Automatically suggests relevant articles and documentation to deepen your understanding of the identified issues and best practices.
 - **Real-time Progress**: A live-updating progress bar and checklist show you exactly what the analysis is doing in the background.
 
+## What Data is Analyzed?
+
+This application operates on a **read-only** basis and prioritizes data privacy. It **does not access, read, or download the actual data** stored inside your BigQuery tables. All analysis is performed exclusively on metadata retrieved from the BigQuery `INFORMATION_SCHEMA`.
+
+Specifically, the application fetches the following metadata for each dataset in the selected project:
+
+*   **Dataset Metadata**:
+    *   Dataset DDL (Data Definition Language) to check for the presence of a dataset description.
+*   **Table Metadata**:
+    *   Table names, types (e.g., `BASE TABLE`, `VIEW`), and DDL.
+    *   Table and column descriptions.
+    *   Partitioning and clustering configurations.
+    *   Last modified times (to identify potentially stale tables).
+    *   Storage metrics, including logical size, physical size (billable bytes), and row counts.
+*   **Project Listing**:
+    *   The application uses the Google Cloud Resource Manager API to list the projects your authenticated account has access to, which populates the project selection dropdown.
+
+This collected metadata is then provided to the AI agents for analysis and report generation. The "Action Plan" and "Recommended Reading" features use a separate AI agent that performs Google searches for relevant public documentation.
+
 ## Technology Stack
 
 - **Backend**: Python with FastAPI and `google-adk` (Google's Agent Development Kit).
