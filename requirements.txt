@@ -1,8 +1,0 @@
-google-cloud-bigquery
-python-dotenv
-google-generativeai
-google-adk
-fastapi
-uvicorn
-google-cloud-resource-manager
-sse-starlette 
