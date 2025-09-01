@@ -187,9 +187,16 @@ def execute_bigquery_query(query: str, region: Optional[str] = None) -> str:
         A string representation of the query results, or an error message.
     """
     try:
-        # This function is used by the discovery agent which gets the project_id
-        # in its prompt, so we don't need to pass it as an argument here.
-        connector = BigQueryConnector(region=region)
+        # Extract project_id from the query if it contains one
+        # Look for patterns like `project_id.INFORMATION_SCHEMA` or `project_id.dataset_name`
+        import re
+        project_match = re.search(r'`?([a-zA-Z0-9\-_]+)`?\.(?:INFORMATION_SCHEMA|`?[a-zA-Z0-9\-_]+`?)', query)
+        project_id = None
+        if project_match:
+            project_id = project_match.group(1)
+        
+        # Create connector with the extracted project_id and region
+        connector = BigQueryConnector(project_id=project_id, region=region)
         results = connector.execute_query(query)
         return json.dumps([dict(row) for row in results])
     except Exception as e:
@@ -209,3 +216,61 @@ def perform_google_search(query: str) -> str:
     # This function is a placeholder. The model will use its native search
     # capabilities when it sees this tool signature.
     pass 
+
+def discover_datasets_across_regions(project_id: str) -> str:
+    """
+    Automatically discovers datasets across multiple regions in a BigQuery project.
+    This function tries common regions and multi-regions to find all datasets.
+    
+    Args:
+        project_id: The GCP project ID.
+        
+    Returns:
+        A JSON string containing all discovered datasets with their regions.
+    """
+    # Common regions and multi-regions to try
+    regions_to_try = [
+        "US",           # US multi-region
+        "EU",           # European multi-region
+        "asia-northeast1",  # Asia region
+        "us-central1",  # US Central
+        "us-east1",     # US East
+        "europe-west1", # Europe West
+        "asia-southeast1"  # Asia Southeast
+    ]
+    
+    all_datasets = []
+    discovered_regions = {}
+    
+    for region in regions_to_try:
+        try:
+            connector = BigQueryConnector(project_id=project_id, region=region)
+            query = f"SELECT schema_name FROM `{project_id}`.INFORMATION_SCHEMA.SCHEMATA"
+            results = connector.execute_query(query)
+            
+            if results:
+                for row in results:
+                    dataset_name = row.get("schema_name")
+                    if dataset_name and not any(d["schema_name"] == dataset_name for d in all_datasets):
+                        all_datasets.append({
+                            "schema_name": dataset_name,
+                            "region": region
+                        })
+                discovered_regions[region] = len(results)
+                print(f"Found {len(results)} datasets in region {region}")
+            
+        except Exception as e:
+            print(f"Could not query region {region}: {e}")
+            continue
+    
+    # Sort datasets by name for consistency
+    all_datasets.sort(key=lambda x: x["schema_name"])
+    
+    result = {
+        "datasets": all_datasets,
+        "total_datasets": len(all_datasets),
+        "regions_checked": list(discovered_regions.keys()),
+        "datasets_per_region": discovered_regions
+    }
+    
+    return json.dumps(result) 

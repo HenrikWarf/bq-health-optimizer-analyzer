@@ -16,7 +16,7 @@ from google.adk.agents import Agent
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai.types import Content, Part
-from backend.tools import get_dataset_and_table_details, execute_bigquery_query, perform_google_search
+from backend.tools import get_dataset_and_table_details, execute_bigquery_query, perform_google_search, discover_datasets_across_regions
 from pydantic import BaseModel
 
 # Construct the path to the .env file in the project root and load it
@@ -61,16 +61,21 @@ def create_discovery_agent():
         model="gemini-2.5-flash",
         instruction="""You have one job: find all the dataset names in a given BigQuery project.
         You will be given the project ID and region in the prompt.
-        You MUST use the `execute_bigquery_query` tool.
-
-        When you call the tool, you need to pass two arguments:
-        1. `query`: Construct a SQL query to find all dataset names. It should look like this: "SELECT schema_name FROM `<project_id>`.INFORMATION_SCHEMA.SCHEMATA;" where you replace `<project_id>` with the actual project ID given to you.
-        2. `region`: The GCP region to query against.
-
+        
+        You have two options:
+        
+        OPTION 1 (Recommended): Use the `discover_datasets_across_regions` tool with just the project_id.
+        This will automatically search across multiple regions and find all datasets.
+        
+        OPTION 2: Use the `execute_bigquery_query` tool with a specific region.
+        
+        For OPTION 1, call: discover_datasets_across_regions(project_id="<project_id>")
+        For OPTION 2, call: execute_bigquery_query(query="SELECT schema_name FROM `<project_id>`.INFORMATION_SCHEMA.SCHEMATA", region="<region>")
+        
         Your final output MUST be a valid JSON string representing a list of objects.
         Each object in the list must have one key: "schema_name".
         For example: [{"schema_name": "dataset_one"}, {"schema_name": "dataset_two"}]""",
-        tools=[execute_bigquery_query],
+        tools=[discover_datasets_across_regions, execute_bigquery_query],
     )
 
 def create_summary_agent():
@@ -234,7 +239,7 @@ async def analyze_environment(request: Request):
             yield {"event": "update", "data": json.dumps({'status': 'Discovery', 'progress': 10, 'details': 'Discovering datasets...'})}
             yield {"event": "checkpoint", "data": json.dumps({'text': 'Discovering all datasets in project...'})}
             discovery_agent = create_discovery_agent()
-            discovery_prompt = f"Find all datasets in the project `{project_id}` using the region `{region}`."
+            discovery_prompt = f"Find all datasets in the project `{project_id}`. Use the discover_datasets_across_regions tool to automatically find datasets across all regions."
             dataset_list_json_str = await run_agent(discovery_agent, discovery_prompt)
             if await request.is_disconnected(): return
             
@@ -244,6 +249,18 @@ async def analyze_environment(request: Request):
                 if not dataset_list_json_str.strip():
                     raise ValueError("The Discovery Agent returned an empty response.")
                 discovered_datasets = json.loads(dataset_list_json_str)
+                
+                # Handle both old format (list of dicts with schema_name) and new format (dict with datasets array)
+                if isinstance(discovered_datasets, dict) and "datasets" in discovered_datasets:
+                    # New format from discover_datasets_across_regions
+                    discovered_datasets = discovered_datasets["datasets"]
+                    print(f"Discovered {len(discovered_datasets)} datasets across multiple regions")
+                elif isinstance(discovered_datasets, list):
+                    # Old format - ensure each item has schema_name
+                    discovered_datasets = [{"schema_name": item.get("schema_name", item)} for item in discovered_datasets]
+                else:
+                    raise ValueError("Unexpected dataset discovery format")
+                    
             except (json.JSONDecodeError, ValueError) as e:
                 raise Exception(f"Discovery Agent failed to return valid JSON. Raw output: '{dataset_list_json_str}'. Error: {e}")
 
@@ -256,9 +273,12 @@ async def analyze_environment(request: Request):
                 dataset_name = dataset_info.get("schema_name")
                 if not dataset_name: continue
                 
+                # Use the region from discovery if available, otherwise fall back to env var
+                dataset_region = dataset_info.get("region", region)
+                
                 progress = 20 + int((i / total_datasets) * 40)
-                yield {"event": "update", "data": json.dumps({'status': 'Fetching', 'progress': progress, 'details': f'Fetching details for: {dataset_name}'})}
-                details_json_str = get_dataset_and_table_details(project_id=project_id, dataset_name=dataset_name, region=region)
+                yield {"event": "update", "data": json.dumps({'status': 'Fetching', 'progress': progress, 'details': f'Fetching details for: {dataset_name} in region {dataset_region}'})}
+                details_json_str = get_dataset_and_table_details(project_id=project_id, dataset_name=dataset_name, region=dataset_region)
                 dataset_details = json.loads(details_json_str)
                 if isinstance(dataset_details, dict) and "error" in dataset_details:
                     print(f"Skipping dataset {dataset_name} due to error: {dataset_details['error']}")
