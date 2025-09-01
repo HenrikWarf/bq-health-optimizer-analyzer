@@ -38,7 +38,6 @@ For each discovered dataset, the system collects comprehensive metadata includin
 - **Documentation Status**: Presence and quality of table and column descriptions
 
 ### 4. AI-Powered Analysis & Scoring
-![AI Analysis Process](./images/Screenshot%205.png)
 
 The system employs multiple specialized AI agents:
 
@@ -59,6 +58,8 @@ The final report provides:
 - **Key Findings**: Prioritized issues categorized by importance (High/Medium/Low)
 - **Actionable Recommendations**: Specific steps to improve your BigQuery environment
 - **Personalized Reading List**: Curated resources relevant to your specific findings
+
+![AI Analysis Process](./images/Screenshot%205.png)
 
 ## What Data is Analyzed?
 
