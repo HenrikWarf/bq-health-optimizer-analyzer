@@ -13,6 +13,53 @@ This application uses a multi-agent AI system to perform a comprehensive analysi
 - **Recommended Reading**: Automatically suggests relevant articles and documentation to deepen your understanding of the identified issues and best practices.
 - **Real-time Progress**: A live-updating progress bar and checklist show you exactly what the analysis is doing in the background.
 
+## How It Works: The Analysis Process
+
+The BigQuery Compass application uses a sophisticated multi-agent AI system to analyze your BigQuery environment. Here's how the process works:
+
+### 1. Project Discovery & Connection
+![Project Selection Interface](./images/Screenshot%202.png)
+
+The application begins by connecting to Google Cloud and discovering all projects your authenticated account can access. This is done using the Google Cloud Resource Manager API, ensuring you can analyze any project you have permissions for.
+
+### 2. Dataset Discovery Across Regions
+![Dataset Discovery Process](./images/Screenshot%203.png)
+
+Using an intelligent discovery agent, the system automatically searches across multiple Google Cloud regions to find all datasets in your selected project. This ensures no datasets are missed, regardless of where they're located.
+
+### 3. Comprehensive Metadata Collection
+![Metadata Collection Progress](./images/Screenshot%204.png)
+
+For each discovered dataset, the system collects comprehensive metadata including:
+- **Table Information**: Names, types (BASE TABLE, VIEW), DDL, and descriptions
+- **Column Details**: Data types, descriptions, and completeness metrics
+- **Storage Metrics**: Logical size, physical size (billable bytes), and row counts
+- **Performance Configuration**: Partitioning, clustering, and last modified times
+- **Documentation Status**: Presence and quality of table and column descriptions
+
+### 4. AI-Powered Analysis & Scoring
+![AI Analysis Process](./images/Screenshot%205.png)
+
+The system employs multiple specialized AI agents:
+
+- **Discovery Agent**: Finds and catalogs all datasets across regions
+- **Summary Agent**: Analyzes metadata and generates comprehensive health reports
+- **Action Plan Agent**: Creates detailed, actionable recommendations with web search integration
+
+The health score is calculated using objective criteria:
+- **Documentation Quality**: Missing descriptions (-5 for dataset, -2 for table, -4 for incomplete columns)
+- **Performance Optimization**: Large unpartitioned tables (-10 points)
+- **Data Freshness**: Stale tables (>90 days old, -3 points)
+
+### 5. Interactive Results & Recommendations
+![Results Interface](./images/Screenshot%206.png)
+
+The final report provides:
+- **Overall Health Score**: 0-100 rating with visual gauge representation
+- **Key Findings**: Prioritized issues categorized by importance (High/Medium/Low)
+- **Actionable Recommendations**: Specific steps to improve your BigQuery environment
+- **Personalized Reading List**: Curated resources relevant to your specific findings
+
 ## What Data is Analyzed?
 
 This application operates on a **read-only** basis and prioritizes data privacy. It **does not access, read, or download the actual data** stored inside your BigQuery tables. All analysis is performed exclusively on metadata retrieved from the BigQuery `INFORMATION_SCHEMA`.
@@ -101,4 +148,21 @@ GEMINI_API_KEY="your-gemini-api-key"
     
     Now, open your browser and navigate to `http://localhost:8080`.
 
-    The application will load, fetch your Google Cloud projects, and be ready for analysis. 
+    The application will load, fetch your Google Cloud projects, and be ready for analysis.
+
+## Use Cases
+
+BigQuery Compass is ideal for:
+
+- **Data Engineers**: Quickly assess the health and optimization opportunities in BigQuery environments
+- **DevOps Teams**: Monitor and improve BigQuery best practices across multiple projects
+- **Cost Optimization**: Identify expensive tables, unused resources, and optimization opportunities
+- **Compliance & Documentation**: Ensure proper documentation and metadata standards are met
+- **Performance Tuning**: Discover tables that could benefit from partitioning, clustering, or other optimizations
+
+## Security & Privacy
+
+- **Read-Only Access**: The application only reads metadata, never your actual data
+- **No Data Storage**: All analysis is performed in-memory and not persisted
+- **Secure Authentication**: Uses Google Cloud's standard authentication mechanisms
+- **Local Processing**: All analysis runs locally on your machine, not in external services 
